@@ -1,0 +1,250 @@
+version: "3.9"
+
+services:
+  hotel-heritage:
+    build:
+      context: ../
+      dockerfile: ./docker/rest-services/Dockerfile
+      args:
+        REST_SERVICE : hotel
+        SERVICE_ID : hotel-heritage
+        EXPOSED_PORT : 1234
+    ports:
+      - "1234:1234"  
+    depends_on:
+      - db-hotel-heritage
+    environment:
+      DATABASE_URL: postgres://postgres:password@db-hotel-heritage:9001/heritage_db
+
+  db-hotel-heritage:
+    build:
+      context: ../
+      dockerfile: ./docker/databases/Dockerfile
+      args:
+        SERVICE_SCHEMA : hotel
+        DATA_FILE: heritage
+        EXPOSED_PORT : 9001
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: heritage_db
+    ports:
+      - "9001:9001"
+    volumes:
+      - heritage-data:/var/lib/postgresql/data
+
+  hotel-mountain:
+    build:
+      context: ../
+      dockerfile: ./docker/rest-services/Dockerfile
+      args:
+        REST_SERVICE : hotel
+        SERVICE_ID : hotel-mountain
+        EXPOSED_PORT : 2345
+    ports:
+      - "2345:2345"  
+    depends_on:
+      - db-hotel-mountain
+    environment:
+      DATABASE_URL: postgres://postgres:password@db-hotel-mountain:5432/mountain_db
+
+  db-hotel-mountain:
+    build:
+      context: ../
+      dockerfile: ./docker/databases/Dockerfile
+      args:
+        SERVICE_SCHEMA : hotel
+        DATA_FILE: mountain
+        EXPOSED_PORT : 9002
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mountain_db
+    ports:
+      - "9002:9002"
+    volumes:
+      - mountain-data:/var/lib/postgresql/data
+
+  hotel-palm:
+    build:
+      context: ../
+      dockerfile: ./docker/rest-services/Dockerfile
+      args:
+        REST_SERVICE : hotel
+        SERVICE_ID : hotel-palm
+        EXPOSED_PORT : 3456
+    ports:
+      - "3456:3456"  
+    depends_on:
+      - db-hotel-palm
+    environment:
+      DATABASE_URL: postgres://postgres:password@db-hotel-palm:5432/palm_db
+
+  db-hotel-palm:
+    build:
+      context: ../
+      dockerfile: ./docker/databases/Dockerfile
+      args:
+        SERVICE_SCHEMA : hotel
+        DATA_FILE: palm
+        EXPOSED_PORT : 9003
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: palm_db
+    ports:
+      - "9003:9003"
+    volumes:
+      - palm-data:/var/lib/postgresql/data
+
+  hotel-serene:
+    build:
+      context: ../
+      dockerfile: ./docker/rest-services/Dockerfile
+      args:
+        REST_SERVICE : hotel
+        SERVICE_ID : hotel-serene
+        EXPOSED_PORT : 4567
+    ports:
+      - "4567:4567"  
+    depends_on:
+      - db-hotel-serene
+    environment:
+      DATABASE_URL: postgres://postgres:password@db-hotel-serene:5432/serene_db
+
+  db-hotel-serene:
+    build:
+      context: ../
+      dockerfile: ./docker/databases/Dockerfile
+      args:
+        SERVICE_SCHEMA : hotel
+        DATA_FILE: serene
+        EXPOSED_PORT : 9004
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: serene_db
+    ports:
+      - "9004:9004"
+    volumes:
+      - serene-data:/var/lib/postgresql/data
+
+  hotel-urban:
+    build:
+      context: ../
+      dockerfile: ./docker/rest-services/Dockerfile
+      args:
+        REST_SERVICE : hotel
+        SERVICE_ID : hotel-urban
+        EXPOSED_PORT : 5678
+    ports:
+      - "5678:5678"  
+    depends_on:
+      - db-hotel-urban
+    environment:
+      DATABASE_URL: postgres://postgres:password@db-hotel-urban:5432/urban_db
+
+  db-hotel-urban:
+    build:
+      context: ../
+      dockerfile: ./docker/databases/Dockerfile
+      args:
+        SERVICE_SCHEMA : hotel
+        DATA_FILE: urban
+        EXPOSED_PORT : 9005
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: urban_db
+    ports:
+      - "9005:9005"
+    volumes:
+      - urban-data:/var/lib/postgresql/data
+
+
+  agency-urban:
+    build:
+      context: ../
+      dockerfile: ./docker/rest-services/Dockerfile
+      args:
+        REST_SERVICE : agency
+        SERVICE_ID : agency-urban
+        EXPOSED_PORT : 5555
+    depends_on:
+      - db-agency-urban
+      - hotel-urban
+      - hotel-serene
+      - hotel-mountain
+      - hotel-palm
+      - hotel-heritage
+    ports:
+      - "5555:5555"  
+    environment:
+      DATABASE_URL: postgres://postgres:password@db-agency-urban:5432/urban_db
+
+  agency-luxe:
+    build:
+      context: ../
+      dockerfile: ./docker/rest-services/Dockerfile
+      args:
+        REST_SERVICE : agency
+        SERVICE_ID : agency-luxe
+        EXPOSED_PORT : 4444
+    depends_on:
+      - db-agency-luxe
+      - hotel-urban
+      - hotel-serene
+      - hotel-mountain
+      - hotel-palm
+      - hotel-heritage
+    ports:
+      - "4444:4444"  
+    environment:
+      DATABASE_URL: postgres://postgres:password@db-agency-luxe:5432/luxe_db
+  
+  db-agency-urban:
+    build:
+      context: ../
+      dockerfile: ./docker/databases/Dockerfile
+      args:
+        SERVICE_SCHEMA : agency
+        DATA_FILE: agency-urban
+        EXPOSED_PORT : 9006
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: urban_db
+    ports:
+      - "9006:9006"
+    volumes:
+      - urban-agency-data:/var/lib/postgresql/data
+
+  db-agency-luxe:
+    build:
+      context: ../
+      dockerfile: ./docker/databases/Dockerfile
+      args:
+        SERVICE_SCHEMA : agency
+        DATA_FILE: agency-luxe
+        EXPOSED_PORT : 9007
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: luxe_db
+    ports:
+      - "9007:9007"
+    volumes:
+      - luxe-agency-data:/var/lib/postgresql/data
+
+
+
+volumes:
+  heritage-data:
+  mountain-data:
+  palm-data:
+  serene-data:
+  urban-data:
+  urban-agency-data:
+  luxe-agency-data:
+
+
