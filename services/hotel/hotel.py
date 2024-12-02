@@ -4,6 +4,8 @@ import logging
 import sys
 from pathlib import Path
 
+from hotel.utils.sql_function import is_room_available
+
 root_path = Path(__file__).parent
 
 sys.path.append(str(root_path / "../"))
@@ -36,6 +38,9 @@ class HotelServices(HotelServiceServicer):
 
     def CheckAvailability(self, request, context):
         logging.info("Checking Availability")
+
+        logging.info(is_room_available())
+
         available_offers = [
             offer for offer in self.hotel_data if offer.room.beds >= request.num_people
         ]
