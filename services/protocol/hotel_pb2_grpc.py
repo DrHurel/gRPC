@@ -5,106 +5,111 @@ import warnings
 
 from protocol import agency_pb2 as services_dot_protocol_dot_agency__pb2
 
-GRPC_GENERATED_VERSION = '1.68.0'
+GRPC_GENERATED_VERSION = "1.68.0"
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
 try:
     from grpc._utilities import first_version_is_lower
-    _version_not_supported = first_version_is_lower(GRPC_VERSION, GRPC_GENERATED_VERSION)
+
+    _version_not_supported = first_version_is_lower(
+        GRPC_VERSION, GRPC_GENERATED_VERSION
+    )
 except ImportError:
     _version_not_supported = True
 
 if _version_not_supported:
     raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in services/protocol/hotel_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+        f"The grpc package installed is at version {GRPC_VERSION},"
+        + f" but the generated code in services/protocol/hotel_pb2_grpc.py depends on"
+        + f" grpcio>={GRPC_GENERATED_VERSION}."
+        + f" Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}"
+        + f" or downgrade your generated code using grpcio-tools<={GRPC_VERSION}."
     )
 
 
 class HotelServiceStub(object):
-    """Services Web pour les hôtels
-    """
+    """Services Web pour les hôtels"""
 
-    def __init__(self, channel):
+    def __init__(self, channel: grpc.Channel):
         """Constructor.
 
         Args:
             channel: A grpc.Channel.
         """
-        self.CheckAvailability = channel.unary_unary(
-                '/reservation.hotel.HotelService/CheckAvailability',
-                request_serializer=services_dot_protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
-                response_deserializer=services_dot_protocol_dot_agency__pb2.AvailabilityResponse.FromString,
-                _registered_method=True)
-        self.MakeReservation = channel.unary_unary(
-                '/reservation.hotel.HotelService/MakeReservation',
-                request_serializer=services_dot_protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
-                response_deserializer=services_dot_protocol_dot_agency__pb2.ReservationResponse.FromString,
-                _registered_method=True)
+        self.CheckAvailability: grpc.UnaryUnaryMultiCallable = channel.unary_unary(
+            "/reservation.hotel.HotelService/CheckAvailability",
+            request_serializer=services_dot_protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
+            response_deserializer=services_dot_protocol_dot_agency__pb2.AvailabilityResponse.FromString,
+            _registered_method=True,
+        )
+        self.MakeReservation: grpc.UnaryUnaryMultiCallable = channel.unary_unary(
+            "/reservation.hotel.HotelService/MakeReservation",
+            request_serializer=services_dot_protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
+            response_deserializer=services_dot_protocol_dot_agency__pb2.ReservationResponse.FromString,
+            _registered_method=True,
+        )
 
 
 class HotelServiceServicer(object):
-    """Services Web pour les hôtels
-    """
+    """Services Web pour les hôtels"""
 
     def CheckAvailability(self, request, context):
-        """Service 1 : Consultation des disponibilités
-        """
+        """Service 1 : Consultation des disponibilités"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def MakeReservation(self, request, context):
-        """Service 2 : Effectuer une réservation
-        """
+        """Service 2 : Effectuer une réservation"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_HotelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'CheckAvailability': grpc.unary_unary_rpc_method_handler(
-                    servicer.CheckAvailability,
-                    request_deserializer=services_dot_protocol_dot_agency__pb2.AvailabilityRequest.FromString,
-                    response_serializer=services_dot_protocol_dot_agency__pb2.AvailabilityResponse.SerializeToString,
-            ),
-            'MakeReservation': grpc.unary_unary_rpc_method_handler(
-                    servicer.MakeReservation,
-                    request_deserializer=services_dot_protocol_dot_agency__pb2.ReservationRequest.FromString,
-                    response_serializer=services_dot_protocol_dot_agency__pb2.ReservationResponse.SerializeToString,
-            ),
+        "CheckAvailability": grpc.unary_unary_rpc_method_handler(
+            servicer.CheckAvailability,
+            request_deserializer=services_dot_protocol_dot_agency__pb2.AvailabilityRequest.FromString,
+            response_serializer=services_dot_protocol_dot_agency__pb2.AvailabilityResponse.SerializeToString,
+        ),
+        "MakeReservation": grpc.unary_unary_rpc_method_handler(
+            servicer.MakeReservation,
+            request_deserializer=services_dot_protocol_dot_agency__pb2.ReservationRequest.FromString,
+            response_serializer=services_dot_protocol_dot_agency__pb2.ReservationResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'reservation.hotel.HotelService', rpc_method_handlers)
+        "reservation.hotel.HotelService", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('reservation.hotel.HotelService', rpc_method_handlers)
+    server.add_registered_method_handlers(
+        "reservation.hotel.HotelService", rpc_method_handlers
+    )
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class HotelService(object):
-    """Services Web pour les hôtels
-    """
+    """Services Web pour les hôtels"""
 
     @staticmethod
-    def CheckAvailability(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def CheckAvailability(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/reservation.hotel.HotelService/CheckAvailability',
+            "/reservation.hotel.HotelService/CheckAvailability",
             services_dot_protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
             services_dot_protocol_dot_agency__pb2.AvailabilityResponse.FromString,
             options,
@@ -115,23 +120,26 @@ class HotelService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )
 
     @staticmethod
-    def MakeReservation(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+    def MakeReservation(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/reservation.hotel.HotelService/MakeReservation',
+            "/reservation.hotel.HotelService/MakeReservation",
             services_dot_protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
             services_dot_protocol_dot_agency__pb2.ReservationResponse.FromString,
             options,
@@ -142,4 +150,5 @@ class HotelService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True)
+            _registered_method=True,
+        )

@@ -27,6 +27,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirement.txt
 
 COPY ./services/${SERVICE}/ .
+COPY ./services/protocol/ ./protocol/
 # Expose the Uvicorn port
 EXPOSE ${EXPOSED_PORT}
 
@@ -35,4 +36,4 @@ ENV SERVICE=${SERVICE}
 ENV PORT=${EXPOSED_PORT}
 
 # Command to run Uvicorn
-CMD uvicorn $SERVICE:serve --port $PORT --host "0.0.0.0"
+CMD python -m $SERVICE -p ${PORT}
