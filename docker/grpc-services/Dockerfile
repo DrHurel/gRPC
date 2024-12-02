@@ -13,7 +13,7 @@ ARG SERVICE_ID
 ARG EXPOSED_PORT
 
 COPY ./docker/${SERVICE_ID}/ . 
-COPY ./docker/requirement.txt .
+COPY ./docker/grpc-services/requirement.txt .
 
 # Install system dependencies, including PostgreSQL development libraries
 RUN apt-get update && \
@@ -26,7 +26,7 @@ RUN apt-get update && \
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirement.txt
 
-COPY ./${SERVICE}/ .
+COPY ./services/${SERVICE}/ .
 # Expose the Uvicorn port
 EXPOSE ${EXPOSED_PORT}
 
@@ -35,4 +35,4 @@ ENV SERVICE=${SERVICE}
 ENV PORT=${EXPOSED_PORT}
 
 # Command to run Uvicorn
-CMD uvicorn $SERVICE:app --port $PORT --host "0.0.0.0"
+CMD uvicorn $SERVICE:serve --port $PORT --host "0.0.0.0"

@@ -4,7 +4,7 @@ services:
   hotel-heritage:
     build:
       context: ../
-      dockerfile: ./docker/server/Dockerfile
+      dockerfile: ./docker/grpc-services/Dockerfile
       args:
         SERVICE : hotel
         SERVICE_ID : hotel-heritage
@@ -36,7 +36,7 @@ services:
   hotel-mountain:
     build:
       context: ../
-      dockerfile: ./docker/rest-services/Dockerfile
+      dockerfile: ./docker/grpc-services/Dockerfile
       args:
         SERVICE : hotel
         SERVICE_ID : hotel-mountain
@@ -68,7 +68,7 @@ services:
   hotel-palm:
     build:
       context: ../
-      dockerfile: ./docker/rest-services/Dockerfile
+      dockerfile: ./docker/grpc-services/Dockerfile
       args:
         SERVICE : hotel
         SERVICE_ID : hotel-palm
@@ -100,7 +100,7 @@ services:
   hotel-serene:
     build:
       context: ../
-      dockerfile: ./docker/rest-services/Dockerfile
+      dockerfile: ./docker/grpc-services/Dockerfile
       args:
         SERVICE : hotel
         SERVICE_ID : hotel-serene
@@ -132,7 +132,7 @@ services:
   hotel-urban:
     build:
       context: ../
-      dockerfile: ./docker/rest-services/Dockerfile
+      dockerfile: ./docker/grpc-services/Dockerfile
       args:
         SERVICE : hotel
         SERVICE_ID : hotel-urban
@@ -165,7 +165,7 @@ services:
   agency-urban:
     build:
       context: ../
-      dockerfile: ./docker/rest-services/Dockerfile
+      dockerfile: ./docker/grpc-services/Dockerfile
       args:
         SERVICE : agency
         SERVICE_ID : agency-urban
@@ -185,7 +185,7 @@ services:
   agency-luxe:
     build:
       context: ../
-      dockerfile: ./docker/rest-services/Dockerfile
+      dockerfile: ./docker/grpc-services/Dockerfile
       args:
         SERVICE : agency
         SERVICE_ID : agency-luxe
