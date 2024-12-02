@@ -4,11 +4,11 @@ import logging
 import sys
 from pathlib import Path
 
-from hotel.utils.sql_function import is_room_available
+from utils.sql_function import is_room_available
 
 root_path = Path(__file__).parent
 
-sys.path.append(str(root_path / "../"))
+sys.path.append(str(root_path / "../../"))
 
 from sqlalchemy import create_engine, text
 import grpc
@@ -25,8 +25,6 @@ config.read(root_path / "hotel.ini")
 
 DATABASE_URI = config["DATABASE"]["URI"]
 JWT_SECRET = config["SECURITY"]["JWT_SECRET"]
-
-engine = create_engine(DATABASE_URI, echo=True)  # echo=True logs SQL queries
 
 
 # Implémentation du service HotelServices
@@ -104,5 +102,6 @@ if __name__ == "__main__":
 
     parser.add_argument("-p", "--port")
     port = parser.parse_args().port
+    engine = create_engine(DATABASE_URI, echo=True)  # echo=True logs SQL queries
 
     serve(port=port)

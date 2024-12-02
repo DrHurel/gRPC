@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package reservation.hotel;
 
-import "services/protocol/types.proto";
-import "services/protocol/agency.proto";
+import "protocol/types.proto";
+import "protocol/agency.proto";
 
 // Types propres à l'hôtel
 message Hotel {

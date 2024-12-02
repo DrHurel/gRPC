@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package reservation.agency;
 
-import "services/protocol/types.proto";
+import "protocol/types.proto";
 
 // Requête pour consulter les disponibilités
 message AvailabilityRequest {

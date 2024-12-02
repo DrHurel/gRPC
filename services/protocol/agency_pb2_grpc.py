@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from protocol import agency_pb2 as services_dot_protocol_dot_agency__pb2
+from protocol import agency_pb2 as protocol_dot_agency__pb2
 
 GRPC_GENERATED_VERSION = '1.68.0'
 GRPC_VERSION = grpc.__version__
@@ -18,7 +18,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in services/protocol/agency_pb2_grpc.py depends on'
+        + f' but the generated code in protocol/agency_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -37,13 +37,13 @@ class AgencyServicesStub(object):
         """
         self.CheckAvailability = channel.unary_unary(
                 '/reservation.agency.AgencyServices/CheckAvailability',
-                request_serializer=services_dot_protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
-                response_deserializer=services_dot_protocol_dot_agency__pb2.AvailabilityResponse.FromString,
+                request_serializer=protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
+                response_deserializer=protocol_dot_agency__pb2.AvailabilityResponse.FromString,
                 _registered_method=True)
         self.MakeReservation = channel.unary_unary(
                 '/reservation.agency.AgencyServices/MakeReservation',
-                request_serializer=services_dot_protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
-                response_deserializer=services_dot_protocol_dot_agency__pb2.ReservationResponse.FromString,
+                request_serializer=protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
+                response_deserializer=protocol_dot_agency__pb2.ReservationResponse.FromString,
                 _registered_method=True)
 
 
@@ -70,13 +70,13 @@ def add_AgencyServicesServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'CheckAvailability': grpc.unary_unary_rpc_method_handler(
                     servicer.CheckAvailability,
-                    request_deserializer=services_dot_protocol_dot_agency__pb2.AvailabilityRequest.FromString,
-                    response_serializer=services_dot_protocol_dot_agency__pb2.AvailabilityResponse.SerializeToString,
+                    request_deserializer=protocol_dot_agency__pb2.AvailabilityRequest.FromString,
+                    response_serializer=protocol_dot_agency__pb2.AvailabilityResponse.SerializeToString,
             ),
             'MakeReservation': grpc.unary_unary_rpc_method_handler(
                     servicer.MakeReservation,
-                    request_deserializer=services_dot_protocol_dot_agency__pb2.ReservationRequest.FromString,
-                    response_serializer=services_dot_protocol_dot_agency__pb2.ReservationResponse.SerializeToString,
+                    request_deserializer=protocol_dot_agency__pb2.ReservationRequest.FromString,
+                    response_serializer=protocol_dot_agency__pb2.ReservationResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -105,8 +105,8 @@ class AgencyServices(object):
             request,
             target,
             '/reservation.agency.AgencyServices/CheckAvailability',
-            services_dot_protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
-            services_dot_protocol_dot_agency__pb2.AvailabilityResponse.FromString,
+            protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
+            protocol_dot_agency__pb2.AvailabilityResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -132,8 +132,8 @@ class AgencyServices(object):
             request,
             target,
             '/reservation.agency.AgencyServices/MakeReservation',
-            services_dot_protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
-            services_dot_protocol_dot_agency__pb2.ReservationResponse.FromString,
+            protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
+            protocol_dot_agency__pb2.ReservationResponse.FromString,
             options,
             channel_credentials,
             insecure,
