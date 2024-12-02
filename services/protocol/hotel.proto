@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package reservation.hotel;
+
+import "services/protocol/types.proto";
+import "services/protocol/agency.proto";
+
+// Types propres à l'hôtel
+message Hotel {
+  string id = 1;
+  string name = 2;
+  reservation.Address address = 3;
+  int32 stars = 4;
+  repeated reservation.Room rooms = 5;
+}
+
+// Services Web pour les hôtels
+service HotelService {
+  // Service 1 : Consultation des disponibilités
+  rpc CheckAvailability (reservation.agency.AvailabilityRequest) returns (reservation.agency.AvailabilityResponse);
+
+  // Service 2 : Effectuer une réservation
+  rpc MakeReservation (reservation.agency.ReservationRequest) returns (reservation.agency.ReservationResponse);
+}

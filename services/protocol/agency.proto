@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package reservation.agency;
+
+import "services/protocol/types.proto";
+
+// Requête pour consulter les disponibilités
+message AvailabilityRequest {
+  string agency_id = 1;
+  string agency_password = 2;
+  string start_date = 3;
+  string end_date = 4;
+  int32 num_people = 5;
+}
+
+// Réponse pour la consultation des disponibilités
+message AvailabilityResponse {
+  repeated reservation.Offer offers = 1;
+}
+
+// Requête pour effectuer une réservation
+message ReservationRequest {
+  string agency_id = 1;
+  string agency_login = 2;
+  string agency_password = 3;
+  string offer_id = 4;
+  reservation.Customer customer = 5;
+}
+
+// Réponse pour une tentative de réservation
+message ReservationResponse {
+  bool success = 1;
+  string confirmation_code = 2; // Null si problème
+  string message = 3;          // Détails en cas d'échec
+}
+
+// Définition des services pour les agences
+service AgencyServices {
+  // Service pour consulter les disponibilités des hôtels partenaires
+  rpc CheckAvailability(AvailabilityRequest) returns (AvailabilityResponse);
+
+  // Service pour effectuer une réservation
+  rpc MakeReservation(ReservationRequest) returns (ReservationResponse);
+}

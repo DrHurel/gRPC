@@ -4,9 +4,9 @@ services:
   hotel-heritage:
     build:
       context: ../
-      dockerfile: ./docker/rest-services/Dockerfile
+      dockerfile: ./docker/server/Dockerfile
       args:
-        REST_SERVICE : hotel
+        SERVICE : hotel
         SERVICE_ID : hotel-heritage
         EXPOSED_PORT : 1234
     ports:
@@ -38,7 +38,7 @@ services:
       context: ../
       dockerfile: ./docker/rest-services/Dockerfile
       args:
-        REST_SERVICE : hotel
+        SERVICE : hotel
         SERVICE_ID : hotel-mountain
         EXPOSED_PORT : 2345
     ports:
@@ -70,7 +70,7 @@ services:
       context: ../
       dockerfile: ./docker/rest-services/Dockerfile
       args:
-        REST_SERVICE : hotel
+        SERVICE : hotel
         SERVICE_ID : hotel-palm
         EXPOSED_PORT : 3456
     ports:
@@ -102,7 +102,7 @@ services:
       context: ../
       dockerfile: ./docker/rest-services/Dockerfile
       args:
-        REST_SERVICE : hotel
+        SERVICE : hotel
         SERVICE_ID : hotel-serene
         EXPOSED_PORT : 4567
     ports:
@@ -134,7 +134,7 @@ services:
       context: ../
       dockerfile: ./docker/rest-services/Dockerfile
       args:
-        REST_SERVICE : hotel
+        SERVICE : hotel
         SERVICE_ID : hotel-urban
         EXPOSED_PORT : 5678
     ports:
@@ -167,7 +167,7 @@ services:
       context: ../
       dockerfile: ./docker/rest-services/Dockerfile
       args:
-        REST_SERVICE : agency
+        SERVICE : agency
         SERVICE_ID : agency-urban
         EXPOSED_PORT : 5555
     depends_on:
@@ -187,7 +187,7 @@ services:
       context: ../
       dockerfile: ./docker/rest-services/Dockerfile
       args:
-        REST_SERVICE : agency
+        SERVICE : agency
         SERVICE_ID : agency-luxe
         EXPOSED_PORT : 4444
     depends_on:

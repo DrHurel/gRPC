@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Set the working directory
 WORKDIR /app
 
-ARG REST_SERVICE
+ARG SERVICE
 ARG SERVICE_ID
 ARG EXPOSED_PORT
 
@@ -26,12 +26,12 @@ RUN apt-get update && \
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirement.txt
 
-COPY ./${REST_SERVICE}/ .
+COPY ./${SERVICE}/ .
 # Expose the Uvicorn port
 EXPOSE ${EXPOSED_PORT}
 
 
-ENV SERVICE=${REST_SERVICE}
+ENV SERVICE=${SERVICE}
 ENV PORT=${EXPOSED_PORT}
 
 # Command to run Uvicorn
