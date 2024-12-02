@@ -1,13 +1,17 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent /"../"))
+
 import grpc
 from concurrent import futures
+from protocol.agency_pb2_grpc import AgencyServicesServicer, add_AgencyServicesServicer_to_server
+from protocol.types_pb2 import AvailabilityResponse,ReservationResponse
+from protocol.hotel_pb2_grpc import HotelServiceStub
 
 # Importer les fichiers générés
-import agency_pb2
-import agency_pb2_grpc
-import hotel_pb2_grpc
 
 # Implémentation du service AgencyServices
-class AgencyServices(agency_pb2_grpc.AgencyServicesServicer):
+class AgencyServices(AgencyServicesServicer):
     def __init__(self, hotel_clients):
         self.hotel_clients = hotel_clients  # Liste des clients pour les hôtels
 
@@ -21,7 +25,7 @@ class AgencyServices(agency_pb2_grpc.AgencyServicesServicer):
             except grpc.RpcError as e:
                 print(f"Erreur lors de la consultation de l'hôtel : {e.details()}")
 
-        return agency_pb2.AvailabilityResponse(offers=all_offers)
+        return AvailabilityResponse(offers=all_offers)
 
     def MakeReservation(self, request, context):
         # Trouver le client hôtel correspondant à l'offre
@@ -29,7 +33,7 @@ class AgencyServices(agency_pb2_grpc.AgencyServicesServicer):
             try:
                 response = client.MakeReservation(request)
                 if response.success:
-                    return agency_pb2.ReservationResponse(
+                    return ReservationResponse(
                         success=True,
                         confirmation_code=response.confirmation_code,
                         message="Réservation réussie."
@@ -37,7 +41,7 @@ class AgencyServices(agency_pb2_grpc.AgencyServicesServicer):
             except grpc.RpcError as e:
                 print(f"Erreur lors de la réservation : {e.details()}")
 
-        return agency_pb2.ReservationResponse(
+        return ReservationResponse(
             success=False,
             confirmation_code="",
             message="Échec de la réservation, aucune offre trouvée."
@@ -51,10 +55,10 @@ def serve():
     hotel_clients = []
     for port in [60051, 60052]:  # Suppose que deux hôtels sont disponibles sur ces ports
         channel = grpc.insecure_channel(f'localhost:{port}')
-        hotel_clients.append(hotel_pb2_grpc.HotelServicesStub(channel))
+        hotel_clients.append(HotelServiceStub(channel))
 
     # Ajouter le service AgencyServices
-    agency_pb2_grpc.add_AgencyServicesServicer_to_server(
+    add_AgencyServicesServicer_to_server(
         AgencyServices(hotel_clients), server
     )
 

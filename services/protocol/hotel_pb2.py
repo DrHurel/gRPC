@@ -22,8 +22,8 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-from services.protocol import types_pb2 as services_dot_protocol_dot_types__pb2
-from services.protocol import agency_pb2 as services_dot_protocol_dot_agency__pb2
+from protocol import types_pb2 as services_dot_protocol_dot_types__pb2
+from protocol import agency_pb2 as services_dot_protocol_dot_agency__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1dservices/protocol/hotel.proto\x12\x11reservation.hotel\x1a\x1dservices/protocol/types.proto\x1a\x1eservices/protocol/agency.proto\"y\n\x05Hotel\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12%\n\x07\x61\x64\x64ress\x18\x03 \x01(\x0b\x32\x14.reservation.Address\x12\r\n\x05stars\x18\x04 \x01(\x05\x12 \n\x05rooms\x18\x05 \x03(\x0b\x32\x11.reservation.Room2\xda\x01\n\x0cHotelService\x12\x66\n\x11\x43heckAvailability\x12\'.reservation.agency.AvailabilityRequest\x1a(.reservation.agency.AvailabilityResponse\x12\x62\n\x0fMakeReservation\x12&.reservation.agency.ReservationRequest\x1a\'.reservation.agency.ReservationResponseb\x06proto3')

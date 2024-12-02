@@ -1,13 +1,13 @@
 
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).parent /"../../"))
+sys.path.append(str(Path(__file__).parent /"../"))
 
 import grpc
 from concurrent import futures
-from  services.protocol.hotel_pb2_grpc import HotelServiceServicer, add_HotelServiceServicer_to_server
-from services.protocol.types_pb2 import Offer,Room
-from services.protocol.agency_pb2 import AvailabilityResponse,ReservationResponse
+from  protocol.hotel_pb2_grpc import HotelServiceServicer, add_HotelServiceServicer_to_server
+from protocol.types_pb2 import Offer,Room
+from protocol.agency_pb2 import AvailabilityResponse,ReservationResponse
 
 # Implémentation du service HotelServices
 class HotelServices(HotelServiceServicer):

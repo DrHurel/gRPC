@@ -22,7 +22,7 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-from services.protocol import types_pb2 as services_dot_protocol_dot_types__pb2
+from protocol import types_pb2 as services_dot_protocol_dot_types__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1eservices/protocol/agency.proto\x12\x12reservation.agency\x1a\x1dservices/protocol/types.proto\"{\n\x13\x41vailabilityRequest\x12\x11\n\tagency_id\x18\x01 \x01(\t\x12\x17\n\x0f\x61gency_password\x18\x02 \x01(\t\x12\x12\n\nstart_date\x18\x03 \x01(\t\x12\x10\n\x08\x65nd_date\x18\x04 \x01(\t\x12\x12\n\nnum_people\x18\x05 \x01(\x05\":\n\x14\x41vailabilityResponse\x12\"\n\x06offers\x18\x01 \x03(\x0b\x32\x12.reservation.Offer\"\x91\x01\n\x12ReservationRequest\x12\x11\n\tagency_id\x18\x01 \x01(\t\x12\x14\n\x0c\x61gency_login\x18\x02 \x01(\t\x12\x17\n\x0f\x61gency_password\x18\x03 \x01(\t\x12\x10\n\x08offer_id\x18\x04 \x01(\t\x12\'\n\x08\x63ustomer\x18\x05 \x01(\x0b\x32\x15.reservation.Customer\"R\n\x13ReservationResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x19\n\x11\x63onfirmation_code\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t2\xdc\x01\n\x0e\x41gencyServices\x12\x66\n\x11\x43heckAvailability\x12\'.reservation.agency.AvailabilityRequest\x1a(.reservation.agency.AvailabilityResponse\x12\x62\n\x0fMakeReservation\x12&.reservation.agency.ReservationRequest\x1a\'.reservation.agency.ReservationResponseb\x06proto3')
