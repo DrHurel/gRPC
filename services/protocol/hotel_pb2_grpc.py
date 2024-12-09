@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from protocol import agency_pb2 as protocol_dot_agency__pb2
+from protocol import hotel_pb2 as protocol_dot_hotel__pb2
 
 GRPC_GENERATED_VERSION = '1.68.0'
 GRPC_VERSION = grpc.__version__
@@ -26,8 +26,7 @@ if _version_not_supported:
 
 
 class HotelServiceStub(object):
-    """Services Web pour les hôtels
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -35,32 +34,29 @@ class HotelServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.CheckAvailability = channel.unary_unary(
-                '/reservation.hotel.HotelService/CheckAvailability',
-                request_serializer=protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
-                response_deserializer=protocol_dot_agency__pb2.AvailabilityResponse.FromString,
+        self.FetchRooms = channel.unary_unary(
+                '/reservation.hotel.HotelService/FetchRooms',
+                request_serializer=protocol_dot_hotel__pb2.FetchRoomPayload.SerializeToString,
+                response_deserializer=protocol_dot_hotel__pb2.FetchRoomResponse.FromString,
                 _registered_method=True)
         self.MakeReservation = channel.unary_unary(
                 '/reservation.hotel.HotelService/MakeReservation',
-                request_serializer=protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
-                response_deserializer=protocol_dot_agency__pb2.ReservationResponse.FromString,
+                request_serializer=protocol_dot_hotel__pb2.ReservationRequest.SerializeToString,
+                response_deserializer=protocol_dot_hotel__pb2.ReservationResponse.FromString,
                 _registered_method=True)
 
 
 class HotelServiceServicer(object):
-    """Services Web pour les hôtels
-    """
+    """Missing associated documentation comment in .proto file."""
 
-    def CheckAvailability(self, request, context):
-        """Service 1 : Consultation des disponibilités
-        """
+    def FetchRooms(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def MakeReservation(self, request, context):
-        """Service 2 : Effectuer une réservation
-        """
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -68,15 +64,15 @@ class HotelServiceServicer(object):
 
 def add_HotelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'CheckAvailability': grpc.unary_unary_rpc_method_handler(
-                    servicer.CheckAvailability,
-                    request_deserializer=protocol_dot_agency__pb2.AvailabilityRequest.FromString,
-                    response_serializer=protocol_dot_agency__pb2.AvailabilityResponse.SerializeToString,
+            'FetchRooms': grpc.unary_unary_rpc_method_handler(
+                    servicer.FetchRooms,
+                    request_deserializer=protocol_dot_hotel__pb2.FetchRoomPayload.FromString,
+                    response_serializer=protocol_dot_hotel__pb2.FetchRoomResponse.SerializeToString,
             ),
             'MakeReservation': grpc.unary_unary_rpc_method_handler(
                     servicer.MakeReservation,
-                    request_deserializer=protocol_dot_agency__pb2.ReservationRequest.FromString,
-                    response_serializer=protocol_dot_agency__pb2.ReservationResponse.SerializeToString,
+                    request_deserializer=protocol_dot_hotel__pb2.ReservationRequest.FromString,
+                    response_serializer=protocol_dot_hotel__pb2.ReservationResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -87,11 +83,10 @@ def add_HotelServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class HotelService(object):
-    """Services Web pour les hôtels
-    """
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def CheckAvailability(request,
+    def FetchRooms(request,
             target,
             options=(),
             channel_credentials=None,
@@ -104,9 +99,9 @@ class HotelService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/reservation.hotel.HotelService/CheckAvailability',
-            protocol_dot_agency__pb2.AvailabilityRequest.SerializeToString,
-            protocol_dot_agency__pb2.AvailabilityResponse.FromString,
+            '/reservation.hotel.HotelService/FetchRooms',
+            protocol_dot_hotel__pb2.FetchRoomPayload.SerializeToString,
+            protocol_dot_hotel__pb2.FetchRoomResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -132,8 +127,8 @@ class HotelService(object):
             request,
             target,
             '/reservation.hotel.HotelService/MakeReservation',
-            protocol_dot_agency__pb2.ReservationRequest.SerializeToString,
-            protocol_dot_agency__pb2.ReservationResponse.FromString,
+            protocol_dot_hotel__pb2.ReservationRequest.SerializeToString,
+            protocol_dot_hotel__pb2.ReservationResponse.FromString,
             options,
             channel_credentials,
             insecure,

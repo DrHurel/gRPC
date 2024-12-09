@@ -12,6 +12,11 @@ message Address {
   GPSPosition gps_position = 6;
 }
 
+message Header {
+  int32 code = 1;
+  string message =  2;
+}
+
 message GPSPosition {
   double latitude = 1;
   double longitude = 2;

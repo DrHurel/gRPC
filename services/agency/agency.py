@@ -1,6 +1,5 @@
 import argparse
 import logging
-from re import L
 import sys
 from pathlib import Path
 from typing import List

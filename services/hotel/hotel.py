@@ -1,10 +1,15 @@
 import argparse
 import configparser
+from email import message
+from enum import Enum
 import logging
+from sre_constants import SUCCESS
 import sys
 from pathlib import Path
+from xmlrpc.client import INTERNAL_ERROR
+from sqlalchemy import create_engine, text
 
-from utils.sql_function import is_room_available
+from utils.sql_function import fetch_rooms, filter_by_availability, is_room_available
 
 root_path = Path(__file__).parent
 
@@ -17,14 +22,34 @@ from protocol.hotel_pb2_grpc import (
     HotelServiceServicer,
     add_HotelServiceServicer_to_server,
 )
-from protocol.types_pb2 import Offer, Room
-from protocol.agency_pb2 import AvailabilityResponse, ReservationResponse
+from protocol.types_pb2 import Offer, Room, Header
+from protocol.hotel_pb2 import (
+    FetchRoomResponse,
+    FetchRoomPayload,
+    ReservationRequest,
+    ReservationResponse,
+)
 
 config = configparser.ConfigParser()
 config.read(root_path / "hotel.ini")
 
 DATABASE_URI = config["DATABASE"]["URI"]
 JWT_SECRET = config["SECURITY"]["JWT_SECRET"]
+engine = create_engine(DATABASE_URI, echo=True)  # echo=True logs SQL queries
+
+
+class ResponseHeader:
+    @staticmethod
+    def SUCCESS(message):
+        return Header(code=200, message=message)
+
+    @staticmethod
+    def BAD_ARGUMENTS(message):
+        return Header(code=400, message=message)
+
+    @staticmethod
+    def INTERNAL_ERROR(message):
+        return Header(code=500, message=message)
 
 
 # Implémentation du service HotelServices
@@ -34,31 +59,44 @@ class HotelServices(HotelServiceServicer):
             hotel_data  # Données codées en dur pour les offres et disponibilités
         )
 
-    def CheckAvailability(self, request, context):
-        logging.info("Checking Availability")
+    def FetchRooms(self, request: FetchRoomPayload, context):
+        logging.info("Fetch Room")
+        with engine.connect() as connection:
+            rooms = fetch_rooms(
+                request.minsize,
+                request.minprize,
+                request.maxprice,
+                request.beds,
+                connection,
+            )
 
-        logging.info(is_room_available())
+            if not rooms:
+                return
+            rooms_list = filter_by_availability(
+                request.start_date, request.end_date, connection, rooms
+            )
 
-        available_offers = [
-            offer for offer in self.hotel_data if offer.room.beds >= request.num_people
-        ]
-        return AvailabilityResponse(offers=available_offers)
+            return FetchRoomResponse(
+                header=ResponseHeader.SUCCESS("success"), rooms=rooms_list
+            )
 
-    def MakeReservation(self, request, context):
+    def MakeReservation(self, request: ReservationRequest, context):
         logging.info("A Reservation is requested")
         # Validation fictive de l'offre et réservation
         for offer in self.hotel_data:
             if offer.id == request.offer_id:
                 logging.info("Reservation successful")
                 return ReservationResponse(
+                    ResponseHeader.SUCCESS("Réservation confirmée."),
                     success=True,
                     confirmation_code="RES12345",
-                    message="Réservation confirmée.",
                 )
 
         logging.info("Reservation failed")
         return ReservationResponse(
-            success=False, confirmation_code="", message="Offre introuvable."
+            success=False,
+            confirmation_code="",
+            header=ResponseHeader.BAD_ARGUMENTS("Offre introuvable."),
         )
 
 
