@@ -15,11 +15,11 @@ def is_room_available(uuid, start_date, end_date, connection: Connection):
         return False
 
 
-def create_reservation(uuid, body, connection: Connection):
+def create_reservation(uuid, start_date, end_date, connection: Connection):
     res = connection.execute(
         text(
             "SELECT * FROM create_reservation('{}' ,'{}','{}')".format(
-                uuid, body["start-date"], body["end-date"]
+                uuid, start_date, end_date
             )
         )
     ).fetchone()

@@ -1,5 +1,6 @@
 import argparse
 import configparser
+import datetime
 from email import message
 from enum import Enum
 import logging
@@ -7,9 +8,16 @@ from sre_constants import SUCCESS
 import sys
 from pathlib import Path
 from xmlrpc.client import INTERNAL_ERROR
-from sqlalchemy import create_engine, text
+from sqlalchemy import Engine, create_engine, text
 
-from utils.sql_function import fetch_rooms, filter_by_availability, is_room_available
+from utils.ResponseHeader import ResponseHeader
+from utils.validation import validate_booking_dates
+from utils.sql_function import (
+    create_reservation,
+    fetch_rooms,
+    filter_by_availability,
+    is_room_available,
+)
 
 root_path = Path(__file__).parent
 
@@ -22,7 +30,6 @@ from protocol.hotel_pb2_grpc import (
     HotelServiceServicer,
     add_HotelServiceServicer_to_server,
 )
-from protocol.types_pb2 import Offer, Room, Header
 from protocol.hotel_pb2 import (
     FetchRoomResponse,
     FetchRoomPayload,
@@ -35,33 +42,18 @@ config.read(root_path / "hotel.ini")
 
 DATABASE_URI = config["DATABASE"]["URI"]
 JWT_SECRET = config["SECURITY"]["JWT_SECRET"]
-engine = create_engine(DATABASE_URI, echo=True)  # echo=True logs SQL queries
 
 
-class ResponseHeader:
-    @staticmethod
-    def SUCCESS(message):
-        return Header(code=200, message=message)
-
-    @staticmethod
-    def BAD_ARGUMENTS(message):
-        return Header(code=400, message=message)
-
-    @staticmethod
-    def INTERNAL_ERROR(message):
-        return Header(code=500, message=message)
-
-
-# Implémentation du service HotelServices
 class HotelServices(HotelServiceServicer):
-    def __init__(self, hotel_data):
-        self.hotel_data = (
-            hotel_data  # Données codées en dur pour les offres et disponibilités
-        )
+
+    def __init__(self, engine: Engine):
+        super().__init__()
+        self.engine = engine
+        logging.info("INIT SERVICE HOTEL")
 
     def FetchRooms(self, request: FetchRoomPayload, context):
         logging.info("Fetch Room")
-        with engine.connect() as connection:
+        with self.engine.connect() as connection:
             rooms = fetch_rooms(
                 request.minsize,
                 request.minprize,
@@ -82,45 +74,41 @@ class HotelServices(HotelServiceServicer):
 
     def MakeReservation(self, request: ReservationRequest, context):
         logging.info("A Reservation is requested")
-        # Validation fictive de l'offre et réservation
-        for offer in self.hotel_data:
-            if offer.id == request.offer_id:
-                logging.info("Reservation successful")
-                return ReservationResponse(
-                    ResponseHeader.SUCCESS("Réservation confirmée."),
-                    success=True,
-                    confirmation_code="RES12345",
-                )
-
-        logging.info("Reservation failed")
-        return ReservationResponse(
-            success=False,
-            confirmation_code="",
-            header=ResponseHeader.BAD_ARGUMENTS("Offre introuvable."),
+        is_valid, error = validate_booking_dates(
+            datetime.datetime.fromisoformat(request.start_date),
+            datetime.datetime.fromisoformat(request.end_date),
         )
+        if not is_valid:
+            return {"message": error}, 400
+
+        with self.engine.connect() as connection:
+            if not is_room_available(
+                request.uuid, request.start_date, request.end_date, connection
+            ):
+                return {"message": "Room isn't available for the selected dates"}, 409
+
+            reservation = create_reservation(
+                request.uuid, request.start_date, request.end_date, connection
+            )
+            if not reservation:
+                return {"message": "Failed to create reservation"}, 500
+
+            return ReservationResponse(
+                header=ResponseHeader.SUCCESS("reservation success"),
+                success=True,
+                confirmation_code=reservation,
+            )
 
 
 def serve(port):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
-    # Exemple de données pour un hôtel
-    hotel_data = [
-        Offer(
-            id="OFFER1",
-            room=Room(id="ROOM1", beds=2, base_price=100.0),
-            available_date="2024-01-01",
-            price=120.0,
+    add_HotelServiceServicer_to_server(
+        HotelServices(
+            engine=create_engine(DATABASE_URI, echo=True)  # echo=True logs SQL queries
         ),
-        Offer(
-            id="OFFER2",
-            room=Room(id="ROOM2", beds=3, base_price=150.0),
-            available_date="2024-01-02",
-            price=170.0,
-        ),
-    ]
-
-    # Ajouter le service HotelServices
-    add_HotelServiceServicer_to_server(HotelServices(hotel_data), server)
+        server,
+    )
 
     logging.info(f"HotelServices starting on port : {port}...")
     server.add_insecure_port(f"[::]:{port}")
