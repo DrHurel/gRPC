@@ -25,8 +25,7 @@ message GPSPosition {
 message Room {
   string id = 1;
   int32 beds = 2;
-  double base_price = 3; // Prix de base avant réduction agence
-  string image_url = 4;  // URL de l'image de la chambre
+  double base_price = 3;
 }
 
 message Offer {

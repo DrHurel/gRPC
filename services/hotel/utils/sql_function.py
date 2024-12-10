@@ -1,4 +1,7 @@
+import logging
+from math import log
 from sqlalchemy import Connection, text
+from protocol.types_pb2 import Room
 from utils.token import validate_token
 
 
@@ -29,20 +32,31 @@ def create_reservation(uuid, start_date, end_date, connection: Connection):
 
 
 def filter_by_availability(start_date, end_date, connection, rooms):
-    rooms_list = [dict(room._mapping) for room in rooms]
+    logging.info("filter by availability")
+    logging.info(rooms[0]._mapping["id"])
+    rooms_list = [
+        Room(
+            id=str(room._mapping["id"]),
+            beds=room._mapping["beds"],
+            base_price=room._mapping["price"],
+        )
+        for room in rooms
+    ]
 
     # Filter by availability if dates provided
-    if start_date and end_date:
+    logging.info(start_date)
+    if start_date and end_date and start_date != "" and end_date != "":
         rooms_list = [
             room
             for room in rooms_list
-            if is_room_available(room["id"], start_date, end_date, connection)
+            if is_room_available(room.id, start_date, end_date, connection)
         ]
 
     return rooms_list
 
 
 def fetch_rooms(minsize, minprize, maxprice, beds, connection):
+    assert maxprice > minprize and maxprice > 0, "max price lead to error"
     query = """
                 SELECT id, name, size, beds, price, description 
                 FROM rooms 

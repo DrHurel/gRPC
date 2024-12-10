@@ -3,7 +3,7 @@ import logging
 import sys
 from pathlib import Path
 
-from agency.serve import serve
+from server import serve
 
 sys.path.append(str(Path(__file__).parent / "../"))
 

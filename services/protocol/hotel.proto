@@ -6,13 +6,12 @@ import "protocol/types.proto";
 
 
 message FetchRoomPayload {
-  string roomUUID = 1;
-  string startDate = 2;
-  string endDate = 3;
-  int32 beds = 4;
-  int32 minsize = 5;
-  int32 minprize = 6;
-  int32 maxprice = 7;
+  optional string startDate = 1;
+  optional string endDate = 2;
+  optional int32 beds = 3;
+  optional int32 minsize = 4;
+  optional int32 minprize = 5;
+  optional int32 maxprice = 6;
 
 }
 

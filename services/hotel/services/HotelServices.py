@@ -1,11 +1,11 @@
-from hotel.utils.ResponseHeader import ResponseHeader
-from hotel.utils.sql_function import (
+from utils.ResponseHeader import ResponseHeader
+from utils.sql_function import (
     create_reservation,
     fetch_rooms,
     filter_by_availability,
     is_room_available,
 )
-from hotel.utils.validation import validate_booking_dates
+from utils.validation import validate_booking_dates
 from protocol.hotel_pb2 import (
     FetchRoomPayload,
     FetchRoomResponse,
@@ -32,18 +32,37 @@ class HotelServices(HotelServiceServicer):
     def FetchRooms(self, request: FetchRoomPayload, context):
         logging.info("Fetch Room")
         with self.engine.connect() as connection:
+            minprize = request.minprize
+            if request.minprize is None:
+                minprize = 0
+
+            maxprice = request.maxprice
+            if request.maxprice is None or request.maxprice == 0:
+                maxprice = 100000000
+
+            minsize = request.minsize
+            if request.minsize is None:
+                minsize = 0
+
+            beds = request.beds
+
+            if request.beds is None:
+                beds = 0
+
             rooms = fetch_rooms(
-                request.minsize,
-                request.minprize,
-                request.maxprice,
-                request.beds,
+                minsize,
+                minprize,
+                maxprice,
+                beds,
                 connection,
             )
-
             if not rooms:
-                return
+                return FetchRoomResponse(
+                    header=ResponseHeader.BAD_ARGUMENTS("no rooms founds"), rooms=[]
+                )
+
             rooms_list = filter_by_availability(
-                request.start_date, request.end_date, connection, rooms
+                request.startDate, request.endDate, connection, rooms
             )
 
             return FetchRoomResponse(
