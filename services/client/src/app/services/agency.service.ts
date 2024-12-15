@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Agency } from '../models/agency';
-import { grpc } from '@improbable-eng/grpc-web';
 import { Request } from '@improbable-eng/grpc-web/dist/typings/invoke';
-import { AgencyServices } from "../generated/protocol/agency_pb_service"
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +27,8 @@ export class AgencyService {
         return agency.url
       }
     }
+
+    return ""
 
 
 
