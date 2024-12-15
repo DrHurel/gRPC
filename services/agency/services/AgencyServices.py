@@ -1,5 +1,9 @@
 # Implémentation du service AgencyServices
-from protocol.agency_pb2 import AvailabilityResponse, ReservationResponse
+from protocol.agency_pb2 import (
+    AvailabilityResponse,
+    FetchRoomResponse,
+    ReservationResponse,
+)
 from protocol.agency_pb2_grpc import AgencyServicesServicer
 
 
@@ -46,3 +50,6 @@ class AgencyServices(AgencyServicesServicer):
             confirmation_code="",
             message="Échec de la réservation, aucune offre trouvée.",
         )
+
+    def FetchRooms(self, request, context):
+        return 0

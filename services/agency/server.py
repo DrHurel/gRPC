@@ -16,29 +16,6 @@ from protocol.hotel_pb2_grpc import HotelServiceStub
 def serve(self_port=50051):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
-    # Charger les clients pour chaque hôtel
-    hotel_clients: List[HotelServiceStub] = []
-    for address in ["hotel-heritage:1234"]:
-        channel = grpc.insecure_channel(address)
-        hotel_clients.append(HotelServiceStub(channel))
-
-    for c in hotel_clients:
-        try:
-            logging.info(
-                c.FetchRooms(
-                    FetchRoomPayload(
-                        startDate=None,
-                        endDate=None,
-                        beds=None,
-                        minsize=None,
-                        minprize=None,
-                        maxprice=None,
-                    )
-                )
-            )
-        except Exception as e:
-            logging.exception(e)
-
     # Ajouter le service AgencyServices
     add_AgencyServicesServicer_to_server(AgencyServices(), server)
 
