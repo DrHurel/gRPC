@@ -1,0 +1,55 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button aria-label="Menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Booking.com</span>
+  <span class="flex-1"></span>
+  <button mat-icon-button aria-label="Favorites">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="Share">
+    <mat-icon>share</mat-icon>
+  </button>
+</mat-toolbar>
+
+<section class="p-6 bg-gray-100">
+  <app-search-bar (rooms)="roomsUpdate($event)"></app-search-bar>
+</section>
+
+<main class="p-6">
+  @if (isLoading()) {
+    <div class="flex justify-center items-center p-8">
+      <mat-spinner></mat-spinner>
+    </div>
+  } @else if (error) {
+    <mat-card class="max-w-md mx-auto">
+      <mat-card-content class="flex items-center gap-2 text-red-600">
+        <mat-icon>error</mat-icon>
+        {{ error }}
+      </mat-card-content>
+    </mat-card>
+  } @else if (rooms().length === 0) {
+    <mat-card class="max-w-md mx-auto">
+      <mat-card-content class="flex items-center gap-2 text-gray-600">
+        <mat-icon>search_off</mat-icon>
+        No rooms found matching your criteria
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <mat-grid-list [cols]="cols" rowHeight="500px" gutterSize="16" >
+      @for (room of rooms(); track room.id) {
+        <mat-grid-tile>
+          <app-room-card [room]="room"></app-room-card>
+        </mat-grid-tile>
+      }
+    </mat-grid-list>
+  }
+</main>
+
+<mat-paginator
+  [length]="totalRooms()"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[8, 16, 24, 32]"
+  (page)="onPageChange($event)"
+  aria-label="Select page">
+</mat-paginator>
