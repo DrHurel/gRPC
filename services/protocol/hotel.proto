@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package reservation.hotel;
+package protocol.hotel;
 
 import "protocol/types.proto";
 
@@ -16,20 +16,20 @@ message FetchRoomPayload {
 }
 
 message FetchRoomResponse {
-  reservation.Header  header  = 1;
-  repeated reservation.Room rooms = 2;
+  protocol.Header  header  = 1;
+  repeated protocol.Room rooms = 2;
  
 
 }
 
-message ReservationRequest {
+message protocolRequest {
   string uuid = 1;
   string start_date = 2;
   string end_date = 3;
 }
 
-message ReservationResponse {
-  reservation.Header  header  = 1;
+message protocolResponse {
+  protocol.Header  header  = 1;
   bool success = 2;
   string confirmation_code = 3;
 
@@ -40,5 +40,5 @@ service HotelService {
 
   rpc FetchRooms (FetchRoomPayload) returns (FetchRoomResponse);
 
-  rpc MakeReservation (ReservationRequest) returns (ReservationResponse);
+  rpc Makeprotocol (protocolRequest) returns (protocolResponse);
 }

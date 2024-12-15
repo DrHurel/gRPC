@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package reservation;
+package protocol;
 
 // Types de base
 message Address {
