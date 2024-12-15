@@ -2,10 +2,12 @@ export interface Room {
     id: string;
     name: string;
     size: number;
-    price: number;
+    basePrice: number;
     beds: number;
     agency: string;
 }
+
+
 
 export interface RoomFilters {
     startDate?: string;
@@ -14,4 +16,5 @@ export interface RoomFilters {
     minprize?: number;
     maxprice?: number;
     beds?: number;
+    gpsPosition?: any;
 }
