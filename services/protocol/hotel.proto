@@ -22,13 +22,13 @@ message FetchRoomResponse {
 
 }
 
-message protocolRequest {
+message ReservationRequest {
   string uuid = 1;
   string start_date = 2;
   string end_date = 3;
 }
 
-message protocolResponse {
+message ReservationResponse {
   protocol.Header  header  = 1;
   bool success = 2;
   string confirmation_code = 3;
@@ -40,5 +40,5 @@ service HotelService {
 
   rpc FetchRooms (FetchRoomPayload) returns (FetchRoomResponse);
 
-  rpc Makeprotocol (protocolRequest) returns (protocolResponse);
+  rpc MakeReservation (ReservationRequest) returns (ReservationResponse);
 }

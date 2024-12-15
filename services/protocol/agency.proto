@@ -19,7 +19,7 @@ message AvailabilityResponse {
 }
 
 // Requête pour effectuer une réservation
-message protocolRequest {
+message ReservationRequest {
   string agency_id = 1;
   string agency_login = 2;
   string agency_password = 3;
@@ -28,10 +28,26 @@ message protocolRequest {
 }
 
 // Réponse pour une tentative de réservation
-message protocolResponse {
+message ReservationResponse {
   bool success = 1;
   string confirmation_code = 2; // Null si problème
   string message = 3;          // Détails en cas d'échec
+}
+
+message FetchRoomPayload {
+  optional string startDate = 1;
+  optional string endDate = 2;
+  optional int32 beds = 3;
+  optional int32 minsize = 4;
+  optional int32 minprize = 5;
+  optional int32 maxprice = 6;
+  optional protocol.GPSPosition gps = 7;
+}
+
+message FetchRoomResponse {
+  protocol.Header  header  = 1;
+  repeated protocol.Room rooms = 2;
+
 }
 
 // Définition des services pour les agences
@@ -40,5 +56,8 @@ service AgencyServices {
   rpc CheckAvailability(AvailabilityRequest) returns (AvailabilityResponse);
 
   // Service pour effectuer une réservation
-  rpc Makeprotocol(protocolRequest) returns (protocolResponse);
+  rpc MakeReservation(ReservationRequest) returns (ReservationResponse);
+
+
+  rpc FetchRooms(FetchRoomPayload) returns (FetchRoomResponse);
 }
