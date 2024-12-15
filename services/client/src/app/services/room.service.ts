@@ -5,7 +5,9 @@ import { Room, RoomFilters } from '../models/room';
 import { Agency } from '../models/agency';
 import { AgencyService } from './agency.service';
 
-
+import { grpc } from '@improbable-eng/grpc-web';
+import { AgencyServices } from '../generated/protocol/agency_pb_service';
+import { ReservationRequest } from '../generated/protocol/agency_pb';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +16,11 @@ export class RoomService {
   constructor(private http: HttpClient, private agencyService: AgencyService) { }
 
   private getRoomsFromAgency(agency: Agency, filters: RoomFilters): Observable<Room[]> {
-    let params = new HttpParams();
+    let request = new R();
 
     if (filters.startDate) {
-      params = params.set('start-date', filters.startDate);
+      
+      request.setfilters.startDate);
     }
     if (filters.endDate) {
       params = params.set('end-date', filters.endDate);
@@ -37,16 +40,12 @@ export class RoomService {
 
     // Include agency name in the rooms fetched
     return new Observable(observer => {
-      this.http.get<Room[]>(`${agency.url}/rooms`, { params }).subscribe({
-        next: (rooms) => {
-          const roomsWithAgency = rooms.map(room => ({ ...room, agency: agency.name }));
-          observer.next(roomsWithAgency);
-          observer.complete();
-        },
-        error: (error) => {
-          observer.error(error);
-        },
-      });
+
+
+      grpc.invoke(AgencyServices.MakeReservation, {
+        request: null,
+        host: agency.url
+      })
     });
   }
 
