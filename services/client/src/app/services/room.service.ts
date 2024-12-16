@@ -1,85 +1,74 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { Room, RoomFilters } from '../models/room';
 import { Agency } from '../models/agency';
 import { AgencyService } from './agency.service';
-
+import { AgencyServicesClient } from '../generated/protocol/agency_pb_service';
+import { FetchRoomPayload } from '../generated/protocol/agency_pb';
 import { grpc } from '@improbable-eng/grpc-web';
-import { AgencyServices } from '../generated/protocol/agency_pb_service';
-import { ReservationRequest } from '../generated/protocol/agency_pb';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoomService {
-  constructor(private http: HttpClient, private agencyService: AgencyService) { }
+  constructor(private agencyService: AgencyService) { }
 
   private getRoomsFromAgency(agency: Agency, filters: RoomFilters): Observable<Room[]> {
-    let request = new R();
+    return new Observable((observer) => {
+      const agencyClient = new AgencyServicesClient(agency.url, {
+        transport: grpc.CrossBrowserHttpTransport({})
+      });
 
-    if (filters.startDate) {
-      
-      request.setfilters.startDate);
-    }
-    if (filters.endDate) {
-      params = params.set('end-date', filters.endDate);
-    }
-    if (filters.minsize) {
-      params = params.set('minsize', filters.minsize.toString());
-    }
-    if (filters.minprize) {
-      params = params.set('minprize', filters.minprize.toString());
-    }
-    if (filters.maxprice) {
-      params = params.set('maxprice', filters.maxprice.toString());
-    }
-    if (filters.beds) {
-      params = params.set('beds', filters.beds.toString());
-    }
+      const payload = new FetchRoomPayload();
+      // Assuming filters are to be set in the payload
+      if (filters.startDate) payload.setStartdate(filters.startDate);
+      if (filters.endDate) payload.setEnddate(filters.endDate);
+      if (filters.beds) payload.setBeds(filters.beds);
 
-    // Include agency name in the rooms fetched
-    return new Observable(observer => {
-
-
-      grpc.invoke(AgencyServices.MakeReservation, {
-        request: null,
-        host: agency.url
-      })
+      agencyClient.fetchRooms(payload, (err, response) => {
+        if (err) {
+          observer.error(err);
+        } else {
+          const roomsWithAgency = response?.getRoomsList().map((room) => ({
+            id: room.getId(),
+            name: room.getName(),
+            size: room.getSize(),
+            basePrice: room.getBasePrice(),
+            beds: room.getBeds(),
+            agency: agency.name
+          }));
+          observer.next(roomsWithAgency);
+          observer.complete();
+        }
+      });
     });
   }
 
   public fetchRooms(filters: RoomFilters): Observable<Room[]> {
-    // Create an array of observables for all agency URLs
-    const agencyRequests = this.agencyService.getAgencies().map(agency =>
+    const agencyRequests = this.agencyService.getAgencies().map((agency) =>
       this.getRoomsFromAgency(agency, filters)
     );
 
-    // Use forkJoin to send the requests concurrently and combine the results
-    return new Observable(observer => {
+    return new Observable((observer) => {
       forkJoin(agencyRequests).subscribe({
         next: (responses) => {
-          // Merge all room responses from different agencies
           const allRooms = responses.flat();
 
-          // Create a map to store the cheapest room for each unique room (by id)
           const roomMap = new Map<string, Room>();
 
-          // Iterate through all rooms and update the map with the cheaper room
-          allRooms.forEach(room => {
-            if (!roomMap.has(room.id) || room.price < roomMap.get(room.id)?.price!) {
+          allRooms.forEach((room) => {
+            if (!roomMap.has(room.id) || room.basePrice < roomMap.get(room.id)?.basePrice!) {
               roomMap.set(room.id, room);
             }
           });
 
-          // Get the values from the map (this will be the unique rooms with the cheapest options)
           const uniqueRooms = Array.from(roomMap.values());
           observer.next(uniqueRooms);
           observer.complete();
         },
         error: (error) => {
           observer.error('Failed to fetch rooms from agencies. Please try again later.');
-        }
+        },
       });
     });
   }

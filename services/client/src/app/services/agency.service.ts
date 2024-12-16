@@ -11,8 +11,8 @@ export class AgencyService {
 
 
   private AGENCIES_API_URLS: Array<Agency> = [
-    { url: 'http://localhost:5555/api/v1', name: "luxe" },
-    { url: 'http://localhost:4444/api/v1', name: "urban" }
+    { url: 'http://localhost:5555', name: "luxe" },
+    { url: 'http://localhost:4444', name: "urban" }
   ];
 
   constructor() { }
