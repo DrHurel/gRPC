@@ -28,7 +28,7 @@ message Room {
   double base_price = 3;
   string name = 4;
   int32 size = 5;
-
+  optional string agency = 6;
 }
 
 message Offer {

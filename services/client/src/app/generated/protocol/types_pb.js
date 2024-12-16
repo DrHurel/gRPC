@@ -833,7 +833,8 @@ id: jspb.Message.getFieldWithDefault(msg, 1, ""),
 beds: jspb.Message.getFieldWithDefault(msg, 2, 0),
 basePrice: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
 name: jspb.Message.getFieldWithDefault(msg, 4, ""),
-size: jspb.Message.getFieldWithDefault(msg, 5, 0)
+size: jspb.Message.getFieldWithDefault(msg, 5, 0),
+agency: (f = jspb.Message.getField(msg, 6)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -889,6 +890,10 @@ proto.protocol.Room.deserializeBinaryFromReader = function(msg, reader) {
     case 5:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setSize(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setAgency(value);
       break;
     default:
       reader.skipField();
@@ -951,6 +956,13 @@ proto.protocol.Room.serializeBinaryToWriter = function(message, writer) {
   if (f !== 0) {
     writer.writeInt32(
       5,
+      f
+    );
+  }
+  f = /** @type {string} */ (jspb.Message.getField(message, 6));
+  if (f != null) {
+    writer.writeString(
+      6,
       f
     );
   }
@@ -1044,6 +1056,42 @@ proto.protocol.Room.prototype.getSize = function() {
  */
 proto.protocol.Room.prototype.setSize = function(value) {
   return jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+/**
+ * optional string agency = 6;
+ * @return {string}
+ */
+proto.protocol.Room.prototype.getAgency = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.protocol.Room} returns this
+ */
+proto.protocol.Room.prototype.setAgency = function(value) {
+  return jspb.Message.setField(this, 6, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.protocol.Room} returns this
+ */
+proto.protocol.Room.prototype.clearAgency = function() {
+  return jspb.Message.setField(this, 6, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.protocol.Room.prototype.hasAgency = function() {
+  return jspb.Message.getField(this, 6) != null;
 };
 
 

@@ -44,7 +44,7 @@ class AgencyServices(AgencyServicesServicer):
     def MakeReservation(self, request: ReservationRequest, context):
         logging.info("make")
         # Trouver le client hôtel correspondant à l'offre
-        for key, client in self.hotel_clients:
+        for key, client in self.hotel_clients.items():
             if key == request.agency_id:
                 try:
                     reservation = hotel_pb2.ReservationRequest(
@@ -82,9 +82,11 @@ class AgencyServices(AgencyServicesServicer):
         )
 
         fetch_payload = {k: v for k, v in fetch_payload.items() if v is not None}
-        for client in self.hotel_clients:
+        for key, client in self.hotel_clients.items():
             try:
-                response = client.FetchRooms(fetch_payload)
+                response: FetchRoomResponse = client.FetchRooms(fetch_payload)
+                for room in response.rooms:
+                    room.agency = key
                 all_rooms.extend(response.rooms)
             except grpc.RpcError as e:
                 logging.error(f"Error fetching rooms from hotel: {e.details()}")
@@ -94,6 +96,6 @@ class AgencyServices(AgencyServicesServicer):
         return FetchRoomResponse(header=header, rooms=all_rooms)
 
     def test(self):
-        for stub in self.hotel_clients:
-            logging.info(stub)
+        for key, stub in self.hotel_clients.items():
+            logging.info(key)
             logging.info(stub.FetchRooms(FetchRoomPayload()))

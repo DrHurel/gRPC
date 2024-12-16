@@ -34,6 +34,6 @@ EXPOSE ${EXPOSED_PORT}
 
 ENV SERVICE=${SERVICE}
 ENV PORT=${EXPOSED_PORT}
-
+ENV GRPC_TRACE="call,call_error"
 # Command to run Uvicorn
 CMD python -m $SERVICE -p ${PORT}

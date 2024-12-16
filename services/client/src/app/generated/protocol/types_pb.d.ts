@@ -109,6 +109,11 @@ export class Room extends jspb.Message {
   getSize(): number;
   setSize(value: number): void;
 
+  hasAgency(): boolean;
+  clearAgency(): void;
+  getAgency(): string;
+  setAgency(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Room.AsObject;
   static toObject(includeInstance: boolean, msg: Room): Room.AsObject;
@@ -126,6 +131,7 @@ export namespace Room {
     basePrice: number,
     name: string,
     size: number,
+    agency: string,
   }
 }
 

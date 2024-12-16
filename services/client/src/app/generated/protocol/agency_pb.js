@@ -21,7 +21,7 @@ var global =
     (function () { return this; }).call(null) ||
     Function('return this')();
 
-import * as protocol_types_pb from '../protocol/types_pb.js';
+var protocol_types_pb = require('../protocol/types_pb.js');
 goog.object.extend(proto, protocol_types_pb);
 goog.exportSymbol('proto.protocol.agency.AvailabilityRequest', null, global);
 goog.exportSymbol('proto.protocol.agency.AvailabilityResponse', null, global);
