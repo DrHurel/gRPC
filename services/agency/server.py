@@ -34,9 +34,7 @@ def serve(self_port=50051):
         # Ajouter le service AgencyServices
         service = AgencyServices(
             {
-                (service["domain"].split(":"))[0]: HotelServiceStub(
-                    grpc.insecure_channel(service["domain"])
-                )
+                service: HotelServiceStub(grpc.insecure_channel(service["domain"]))
                 for service in services
             }
         )

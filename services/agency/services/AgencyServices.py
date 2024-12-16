@@ -30,7 +30,7 @@ class AgencyServices(AgencyServicesServicer):
     def CheckAvailability(self, request, context):
         # Consolidation des réponses des hôtels partenaires
         all_offers = []
-        for client in self.hotel_clients:
+        for _, client in self.hotel_clients.items():
             try:
                 response = client.CheckAvailability(request)
                 all_offers.extend(response.offers)
@@ -45,7 +45,7 @@ class AgencyServices(AgencyServicesServicer):
         logging.info("make")
         # Trouver le client hôtel correspondant à l'offre
         for key, client in self.hotel_clients.items():
-            if key == request.agency_id:
+            if key["domain"] == request.agency_id:
                 try:
                     reservation = hotel_pb2.ReservationRequest(
                         uuid=request.offer_id,
@@ -86,7 +86,8 @@ class AgencyServices(AgencyServicesServicer):
             try:
                 response: FetchRoomResponse = client.FetchRooms(fetch_payload)
                 for room in response.rooms:
-                    room.agency = key
+                    room.agency = key["domain"]
+                    room.base_price += room.base_price * float(key["rooms_margins"])
                 all_rooms.extend(response.rooms)
             except grpc.RpcError as e:
                 logging.error(f"Error fetching rooms from hotel: {e.details()}")
