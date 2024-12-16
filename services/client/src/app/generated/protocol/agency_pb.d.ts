@@ -80,6 +80,12 @@ export class ReservationRequest extends jspb.Message {
   getCustomer(): protocol_types_pb.Customer | undefined;
   setCustomer(value?: protocol_types_pb.Customer): void;
 
+  getStartDate(): string;
+  setStartDate(value: string): void;
+
+  getEndDate(): string;
+  setEndDate(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ReservationRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ReservationRequest): ReservationRequest.AsObject;
@@ -97,6 +103,8 @@ export namespace ReservationRequest {
     agencyPassword: string,
     offerId: string,
     customer?: protocol_types_pb.Customer.AsObject,
+    startDate: string,
+    endDate: string,
   }
 }
 

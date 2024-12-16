@@ -25,6 +25,8 @@ message ReservationRequest {
   string agency_password = 3;
   string offer_id = 4;
   protocol.Customer customer = 5;
+  string start_date = 6;
+  string end_date = 7;
 }
 
 // Réponse pour une tentative de réservation

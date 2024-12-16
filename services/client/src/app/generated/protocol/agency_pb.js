@@ -20,7 +20,7 @@ var global =
     (typeof self !== 'undefined' && self) ||
     (function () { return this; }).call(null) ||
     Function('return this')();
-    
+
 import * as protocol_types_pb from '../protocol/types_pb.js';
 goog.object.extend(proto, protocol_types_pb);
 goog.exportSymbol('proto.protocol.agency.AvailabilityRequest', null, global);
@@ -601,7 +601,9 @@ agencyId: jspb.Message.getFieldWithDefault(msg, 1, ""),
 agencyLogin: jspb.Message.getFieldWithDefault(msg, 2, ""),
 agencyPassword: jspb.Message.getFieldWithDefault(msg, 3, ""),
 offerId: jspb.Message.getFieldWithDefault(msg, 4, ""),
-customer: (f = msg.getCustomer()) && protocol_types_pb.Customer.toObject(includeInstance, f)
+customer: (f = msg.getCustomer()) && protocol_types_pb.Customer.toObject(includeInstance, f),
+startDate: jspb.Message.getFieldWithDefault(msg, 6, ""),
+endDate: jspb.Message.getFieldWithDefault(msg, 7, "")
   };
 
   if (includeInstance) {
@@ -658,6 +660,14 @@ proto.protocol.agency.ReservationRequest.deserializeBinaryFromReader = function(
       var value = new protocol_types_pb.Customer;
       reader.readMessage(value,protocol_types_pb.Customer.deserializeBinaryFromReader);
       msg.setCustomer(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setStartDate(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setEndDate(value);
       break;
     default:
       reader.skipField();
@@ -722,6 +732,20 @@ proto.protocol.agency.ReservationRequest.serializeBinaryToWriter = function(mess
       5,
       f,
       protocol_types_pb.Customer.serializeBinaryToWriter
+    );
+  }
+  f = message.getStartDate();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
+      f
+    );
+  }
+  f = message.getEndDate();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
+      f
     );
   }
 };
@@ -833,6 +857,42 @@ proto.protocol.agency.ReservationRequest.prototype.clearCustomer = function() {
  */
 proto.protocol.agency.ReservationRequest.prototype.hasCustomer = function() {
   return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional string start_date = 6;
+ * @return {string}
+ */
+proto.protocol.agency.ReservationRequest.prototype.getStartDate = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.protocol.agency.ReservationRequest} returns this
+ */
+proto.protocol.agency.ReservationRequest.prototype.setStartDate = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional string end_date = 7;
+ * @return {string}
+ */
+proto.protocol.agency.ReservationRequest.prototype.getEndDate = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.protocol.agency.ReservationRequest} returns this
+ */
+proto.protocol.agency.ReservationRequest.prototype.setEndDate = function(value) {
+  return jspb.Message.setProto3StringField(this, 7, value);
 };
 
 

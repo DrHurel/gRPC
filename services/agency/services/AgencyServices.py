@@ -1,8 +1,11 @@
 # Implémentation du service AgencyServices
-from typing import List
+from typing import Dict, List
+from protocol import agency_pb2
+from protocol import hotel_pb2
 from protocol.agency_pb2 import (
     AvailabilityResponse,
     FetchRoomResponse,
+    ReservationRequest,
     ReservationResponse,
 )
 from protocol.agency_pb2_grpc import AgencyServicesServicer
@@ -19,7 +22,7 @@ from protocol.hotel_pb2_grpc import HotelServiceStub
 
 class AgencyServices(AgencyServicesServicer):
 
-    hotel_clients: List[HotelServiceStub]
+    hotel_clients: Dict[str, HotelServiceStub]
 
     def __init__(self, hotel_clients):
         self.hotel_clients = hotel_clients  # Liste des clients pour les hôtels
@@ -38,20 +41,26 @@ class AgencyServices(AgencyServicesServicer):
 
         return AvailabilityResponse(offers=all_offers)
 
-    def MakeReservation(self, request, context):
+    def MakeReservation(self, request: ReservationRequest, context):
         logging.info("make")
         # Trouver le client hôtel correspondant à l'offre
-        for client in self.hotel_clients:
-            try:
-                response = client.MakeReservation(request)
-                if response.success:
-                    return ReservationResponse(
-                        success=True,
-                        confirmation_code=response.confirmation_code,
-                        message="Réservation réussie.",
+        for key, client in self.hotel_clients:
+            if key == request.agency_id:
+                try:
+                    reservation = hotel_pb2.ReservationRequest(
+                        uuid=request.offer_id,
+                        start_date=request.start_date,
+                        end_date=request.end_date,
                     )
-            except grpc.RpcError as e:
-                logging.error(f"Erreur lors de la réservation : {e.details()}")
+                    response = client.MakeReservation(reservation)
+                    if response.success:
+                        return ReservationResponse(
+                            success=True,
+                            confirmation_code=response.confirmation_code,
+                            message="Réservation réussie.",
+                        )
+                except grpc.RpcError as e:
+                    logging.error(f"Erreur lors de la réservation : {e.details()}")
 
         return ReservationResponse(
             success=False,
@@ -59,7 +68,7 @@ class AgencyServices(AgencyServicesServicer):
             message="Échec de la réservation, aucune offre trouvée.",
         )
 
-    def FetchRooms(self, request, context):
+    def FetchRooms(self, request: agency_pb2.FetchRoomPayload, context):
         logging.info("fetchRoom")
         all_rooms = []
 

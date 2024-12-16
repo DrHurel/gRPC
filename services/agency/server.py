@@ -33,10 +33,12 @@ def serve(self_port=50051):
         services = fetch_services(connection)
         # Ajouter le service AgencyServices
         service = AgencyServices(
-            [
-                HotelServiceStub(grpc.insecure_channel(service["domain"]))
+            {
+                [service["domain"].split(":")[0]]: HotelServiceStub(
+                    grpc.insecure_channel(service["domain"])
+                )
                 for service in services
-            ]
+            }
         )
 
         add_AgencyServicesServicer_to_server(

@@ -744,7 +744,9 @@ proto.protocol.hotel.ReservationRequest.toObject = function(includeInstance, msg
   var f, obj = {
 uuid: jspb.Message.getFieldWithDefault(msg, 1, ""),
 startDate: jspb.Message.getFieldWithDefault(msg, 2, ""),
-endDate: jspb.Message.getFieldWithDefault(msg, 3, "")
+endDate: jspb.Message.getFieldWithDefault(msg, 3, ""),
+agencyId: jspb.Message.getFieldWithDefault(msg, 4, ""),
+passwordId: jspb.Message.getFieldWithDefault(msg, 5, "")
   };
 
   if (includeInstance) {
@@ -793,6 +795,14 @@ proto.protocol.hotel.ReservationRequest.deserializeBinaryFromReader = function(m
       var value = /** @type {string} */ (reader.readString());
       msg.setEndDate(value);
       break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setAgencyId(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPasswordId(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -840,6 +850,20 @@ proto.protocol.hotel.ReservationRequest.serializeBinaryToWriter = function(messa
   if (f.length > 0) {
     writer.writeString(
       3,
+      f
+    );
+  }
+  f = message.getAgencyId();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
+  f = message.getPasswordId();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
       f
     );
   }
@@ -897,6 +921,42 @@ proto.protocol.hotel.ReservationRequest.prototype.getEndDate = function() {
  */
 proto.protocol.hotel.ReservationRequest.prototype.setEndDate = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string agency_id = 4;
+ * @return {string}
+ */
+proto.protocol.hotel.ReservationRequest.prototype.getAgencyId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.protocol.hotel.ReservationRequest} returns this
+ */
+proto.protocol.hotel.ReservationRequest.prototype.setAgencyId = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional string password_id = 5;
+ * @return {string}
+ */
+proto.protocol.hotel.ReservationRequest.prototype.getPasswordId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.protocol.hotel.ReservationRequest} returns this
+ */
+proto.protocol.hotel.ReservationRequest.prototype.setPasswordId = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 

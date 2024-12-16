@@ -94,6 +94,12 @@ export class ReservationRequest extends jspb.Message {
   getEndDate(): string;
   setEndDate(value: string): void;
 
+  getAgencyId(): string;
+  setAgencyId(value: string): void;
+
+  getPasswordId(): string;
+  setPasswordId(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ReservationRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ReservationRequest): ReservationRequest.AsObject;
@@ -109,6 +115,8 @@ export namespace ReservationRequest {
     uuid: string,
     startDate: string,
     endDate: string,
+    agencyId: string,
+    passwordId: string,
   }
 }
 
